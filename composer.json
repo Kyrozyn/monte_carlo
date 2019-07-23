@@ -1,0 +1,15 @@
+{
+  "name": "Kyrozyn/Monte_Carlo",
+  "description": "Monte Carlo Application",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Andreas Rizki Rizaldi",
+      "email": "arizkirizaldi@email.unikom.ac.id"
+    }
+  ],
+  "require": {
+    "catfan/medoo": "v1.7.2"
+  }
+}
