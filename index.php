@@ -120,9 +120,7 @@
         </table>
     </div>
     <hr>
-    <div class="row">
-        <h4>Probabilitas Data Penjualan Produk</h4>
-    </div>
+
     <div class="row">
         <table class="table" id="interval">
             <thead class="thead-dark">
@@ -158,11 +156,102 @@
                             <td><?php echo $interval_kelas_x?></td>
                             <td><?php echo $interval_kelas_y?></td>
                             <td><?php echo $probkum?></td>
-
                         </tr>
                         <?php
                     }
                 ?>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <h4>Interval Nilai Random</h4>
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>Interval Nilai Random</th>
+                <th>Hasil Interval</th>
+            </tr>
+            </thead>
+            <tbody>
+        <?php
+        //tampilkan hasil interval
+        for($a=0;$a<$category;$a++){
+            echo"<tr>
+                <td>".$interval_kelas_x_array[$a]."-".$interval_kelas_y_array[$a]."</td>
+                <td>".$limitxarray[$a]."-".$limityarray[$a]."</td>
+            </tr>";
+        }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <h4>Simulasi</h4>
+    </div>
+    <div class="row">
+        <table class="table" id="simulasi">
+            <thead>
+            <tr>
+                <th>Hari Ke - </th>
+                <th>Nilai Random</th>
+                <th>Hasil</th>
+                <th>Jumlah Yang Terjual</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+        <?php
+            //menggunakan algoritma Multiplicative Random Number Generator
+            $z0 = 12357;
+            $m = 111111111;
+            $a = 77;
+            //$c = 9;
+            $zi = [];
+            for($i=0;$i<90;$i++){
+                if($i == 0){
+                    $zikurangsatu = $z0;
+                }
+                else{
+                    $zikurangsatu = $zi[$i-1];
+                }
+                //rumus lcg... tidak terpakai.. tapi boleh dicoba
+                //$zip = ($a*$zikurangsatu+$c)%$m;
+                //rumus mrng
+                $zip = ($a*$zikurangsatu)%$m;
+                array_push($zi,$zip);
+                $min = 0;
+                $max = 99;
+                $ui = number_format($zip/$m,4);
+                $end = ceil($min+($zip/$m)*($max-$min+1));
+                //echo $zip." dengan u1 = ".$ui." dengan variate ".$end."<br>";
+                for($a=0;$a<$category;$a++){
+                    if($end > $interval_kelas_x_array[$a] AND $end < $interval_kelas_y_array[$a]){
+                        $terpilih = $a;
+                    }
+                }
+                $min1 = $limitxarray[$terpilih];
+                $max1 = $limityarray[$terpilih];
+                $ui1 = number_format($zip/$m);
+                $end1 = round($min1+($zip/$m)*($max1-$min1+1),0,2);
+                //terjadi bug dimana mungkin karena proses pembulatannya yang menjadi keatas. Hasilnya bisa melebihi max
+                if ($end1 > $max1) {
+                    $end1 = $max1;
+                }
+                ?>
+                <tr>
+                    <td scope="row"><?php echo $i+1?></td>
+                    <td><?php echo $end?></td>
+                    <td><?php echo $min1." - ".$max1?></td>
+                    <td><?php echo $end1?></td>
+                </tr>
+        <?php
+            }
+        ?>
             </tbody>
         </table>
     </div>
@@ -194,7 +283,16 @@
                 "info": "Menampilkan Data ke _START_ sampai _END_ dari _TOTAL_ data",
             }
         });
+        $('#simulasi').DataTable({
+            "searching": false,
+            "oLanguage": {
+                "sLengthMenu": "Tampilkan _MENU_ Data",
 
+            },
+            "language": {
+                "info": "Menampilkan Data ke _START_ sampai _END_ dari _TOTAL_ data",
+            }
+        });
     });
 </script>
 </body>
