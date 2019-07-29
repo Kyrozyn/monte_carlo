@@ -21,10 +21,10 @@
     <div class="collapse navbar-collapse" id="collapsibleNavId">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Input Data Penjualan</a>
+                <a class="nav-link" href="input.php">Input Data Penjualan</a>
             </li>
         </ul>
     </div>
@@ -42,23 +42,45 @@
         <table class="table" id="data">
             <thead>
             <tr>
-                <th>x hari kebelakang</th>
+                <th>Hari ke</th>
                 <th>Jumlah barang</th>
             </tr>
             </thead>
             <tbody>
             <?php
+
+            use Medoo\Medoo;
+
+            require __DIR__ . '/vendor/autoload.php';
             $data = [];
-            for ($a = 1; $a < 101; $a++) {
-                $rand = rand(0, 50);
-                array_push($data, $rand);
-                ?>
-                <tr>
-                    <td><?php echo($a) ?></td>
-                    <td><?php echo($rand) ?></td>
-                </tr>
-                <?php
+            $db = new Medoo([
+                'database_type' => 'mysql',
+                'database_name' => 'mosi',
+                'server' => 'localhost',
+                'username' => 'root',
+                'password' => '',]);
+            //ambil data dari database
+            $dataa = $db->select("data","*");
+            $a = 0;
+            foreach ($dataa as $datas){
+                $a = $a+1;
+                array_push($data, $datas['data']);
+                ?><tr><td><?php echo($a) ?></td>
+                    <td><?php echo($datas['data']) ?></td></tr>
+            <?php
             }
+            //untuk simulasi, data tidak ngambil dari database (Tidak dipakai)
+//            for ($a = 1; $a < 101; $a++) {
+//                $rand = rand(0, 50);
+//                array_push($data, $rand);
+//                ?>
+<!--                <tr>-->
+<!--                    <td>--><?php //echo($a) ?><!--</td>-->
+<!--                    <td>--><?php //echo($rand) ?><!--</td>-->
+<!--                </tr>-->
+<!--                --><?php
+//            }
+
             $jumlah_data = count($data);
             ?>
             </tbody>
@@ -77,7 +99,7 @@
                 </tr>
             </thead>
             <?php
-            $category = 6;
+            $category = 5;
             $limitxarray = [];
             $limityarray = [];
             $countarray = [];
@@ -104,10 +126,10 @@
                 array_push($limityarray,$limity);
                 array_push($countarray,$count);
                 //menghitung probabilitas
-                $prob = round($count/$jumlah_data,2);
+                $prob = round($count/$jumlah_data,3);
                 array_push($probarray,$prob);
                 //menghitung persen
-                $persen = round($prob*100,2,PHP_ROUND_HALF_DOWN);
+                $persen = round($prob*100,0,PHP_ROUND_HALF_DOWN);
                 array_push($persenarray,$persen);
                 ?>
                 <tr>
@@ -190,7 +212,7 @@
     </div>
     <hr>
     <div class="row">
-        <h4>Simulasi</h4>
+        <h4>Simulasi 90 Hari Kedepan</h4>
     </div>
     <div class="row">
         <table class="table" id="simulasi">
@@ -208,7 +230,7 @@
         <?php
             //menggunakan algoritma Multiplicative Random Number Generator
             $z0 = 12357;
-            $m = 111111111;
+            $m = 1111111111;
             $a = 77;
             //$c = 9;
             $zi = [];
@@ -224,9 +246,8 @@
                 //rumus mrng
                 $zip = ($a*$zikurangsatu)%$m;
                 array_push($zi,$zip);
-//                $min = 0;
-//                $max = 99;
-                //^Jadinya bangkitkan angka dari data terkecil dan data terbesar, min dan max nya tidak didefinisikan
+                $min = 0;
+                $max = 99;
                 $ui = number_format($zip/$m,4);
                 $end = ceil($min+($zip/$m)*($max-$min+1));
                 //echo $zip." dengan u1 = ".$ui." dengan variate ".$end."<br>";
