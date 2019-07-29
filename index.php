@@ -224,13 +224,14 @@
                 //rumus mrng
                 $zip = ($a*$zikurangsatu)%$m;
                 array_push($zi,$zip);
-                $min = 0;
-                $max = 99;
+//                $min = 0;
+//                $max = 99;
+                //^Jadinya bangkitkan angka dari data terkecil dan data terbesar, min dan max nya tidak didefinisikan
                 $ui = number_format($zip/$m,4);
                 $end = ceil($min+($zip/$m)*($max-$min+1));
                 //echo $zip." dengan u1 = ".$ui." dengan variate ".$end."<br>";
                 for($a=0;$a<$category;$a++){
-                    if($end > $interval_kelas_x_array[$a] AND $end < $interval_kelas_y_array[$a]){
+                    if($end >= $interval_kelas_x_array[$a] AND $end <= $interval_kelas_y_array[$a]){
                         $terpilih = $a;
                     }
                 }
